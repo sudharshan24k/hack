@@ -54,6 +54,35 @@
   line-height: 1.6;
 }
 
+.home-actions {
+  position: absolute;
+  top: 32px;
+  right: 48px;
+  display: flex;
+  gap: 16px;
+  z-index: 10;
+}
+
+.home-btn {
+  background-color: #1a237e;
+  color: white;
+  border: none;
+  padding: 16px 32px;
+  border-radius: 8px;
+  font-size: 18px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-decoration: none;
+  box-shadow: 0 4px 12px rgba(26, 35, 126, 0.08);
+}
+
+.home-btn:hover {
+  background-color: #0d1642;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(26, 35, 126, 0.18);
+}
+
 @media (max-width: 768px) {
   .home-content h1 {
     font-size: 2rem;
@@ -66,4 +95,11 @@
   .home-features {
     grid-template-columns: 1fr;
   }
+
+  .home-actions {
+    top: 16px;
+    right: 16px;
+    gap: 10px;
+  }
 } 
+

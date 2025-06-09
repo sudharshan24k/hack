@@ -1,5 +1,5 @@
 import React from 'react';
-import { Navigate } from 'react-router-dom';
+import { Navigate, Link } from 'react-router-dom';
 import './Home.css';
 
 function Home() {
@@ -11,6 +11,9 @@ function Home() {
 
   return (
     <div className="home-container">
+      <div className="home-actions">
+          <Link to="/login" className="home-btn">Login</Link>
+      </div>
       <div className="home-content">
         <h1>Welcome to Portfolio Management</h1>
         <p>Track and manage your investments in one place</p>
