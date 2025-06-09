@@ -1,0 +1,126 @@
+openapi: 3.0.0
+info:
+  title: Portfolio API
+  version: 1.0.0
+servers:
+  - url: http://localhost:3000
+paths:
+  /api/portfolio:
+    get:
+      summary: Get all portfolio items (with optional search and filtering)
+      parameters:
+        - in: query
+          name: search
+          schema:
+            type: string
+          description: Search by title (case-insensitive)
+        - in: query
+          name: technology
+          schema:
+            type: string
+          description: Filter by technology (comma-separated for multiple)
+      responses:
+        '200':
+          description: Success
+    post:
+      summary: Create a new portfolio item
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - title
+                - description
+                - imageUrl
+                - technologies
+                - projectUrl
+                - githubUrl
+              properties:
+                title:
+                  type: string
+                description:
+                  type: string
+                imageUrl:
+                  type: string
+                technologies:
+                  type: array
+                  items:
+                    type: string
+                projectUrl:
+                  type: string
+                githubUrl:
+                  type: string
+      responses:
+        '201':
+          description: Created
+
+  /api/portfolio/{id}:
+    get:
+      summary: Get a single portfolio item by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Success
+        '404':
+          description: Portfolio item not found
+    put:
+      summary: Update a portfolio item by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - title
+                - description
+                - imageUrl
+                - technologies
+                - projectUrl
+                - githubUrl
+              properties:
+                title:
+                  type: string
+                description:
+                  type: string
+                imageUrl:
+                  type: string
+                technologies:
+                  type: array
+                  items:
+                    type: string
+                projectUrl:
+                  type: string
+                githubUrl:
+                  type: string
+      responses:
+        '200':
+          description: Updated
+        '404':
+          description: Portfolio item not found
+    delete:
+      summary: Delete a portfolio item by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Portfolio item deleted successfully
+        '404':
+          description: Portfolio item not found

@@ -1,14 +1,5 @@
 const Portfolio = require('../models/Portfolio');
 
-// Get all portfolio items
-exports.getAllPortfolios = async (req, res) => {
-  try {
-    const portfolios = await Portfolio.find().sort({ createdAt: -1 });
-    res.json(portfolios);
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
-};
 
 // Get a single portfolio item
 exports.getPortfolioById = async (req, res) => {
@@ -63,3 +54,23 @@ exports.deletePortfolio = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 }; 
+
+// GET /api/portfolio?search=...&technology=...
+exports.getAllPortfolios = async (req, res) => {
+  try {
+    const { search, technology } = req.query;
+    let filter = {};
+
+    if (search) {
+      filter.title = { $regex: search, $options: 'i' }; // case-insensitive search
+    }
+    if (technology) {
+      filter.technologies = technology; // exact match; for multiple, use $in
+    }
+
+    const portfolios = await Portfolio.find(filter);
+    res.json(portfolios);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
