@@ -128,7 +128,7 @@ exports.updateProfile = async (req, res) => {
         return res.status(400).json({ message: 'Current password is incorrect' });
       }
       // Hash new password
-      user.password = await bcrypt.hash(newPassword, 10);
+      user.password = newPassword;
     }
 
     // Update user fields
