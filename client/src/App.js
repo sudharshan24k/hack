@@ -786,6 +786,18 @@ function App() {
               </svg>
               Logout
             </button>
+            <a 
+              href="https://docs.google.com/spreadsheets/d/17KsfkoqWT2QwsdCyqDcVpdfb28eHO4ZONBacQoj49lM/edit?usp=sharing"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="personal-finance-btn"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                <path d="M4 4a2 2 0 00-2 2v1h16V6a2 2 0 00-2-2H4z" />
+                <path fillRule="evenodd" d="M18 9H2v5a2 2 0 002 2h12a2 2 0 002-2V9zM4 13a1 1 0 011-1h1a1 1 0 110 2H5a1 1 0 01-1-1zm5-1a1 1 0 100 2h1a1 1 0 100-2H9z" clipRule="evenodd" />
+              </svg>
+              Personal Finance
+            </a>
           </div>
         </header>
       )}
@@ -801,88 +813,89 @@ function App() {
         <Route path="/pf-calculator" element={isAuthenticated ? <PFCalculator /> : <Navigate to="/login" replace />} />
         <Route path="/dashboard" element={isAuthenticated ? (
           <main className="App-main">
-            <div className="dashboard-container flex flex-col gap-6 p-6">
-              {/* Top Section with Add Asset Button */}
-              <div className="dashboard-header flex justify-between items-center">
-                <h2 className="text-2xl font-bold">Portfolio Dashboard</h2>
-                <button 
-                  className="add-asset-btn flex items-center gap-2 px-6 py-3 bg-blue-600 text-white rounded-lg shadow-lg hover:bg-blue-700 transition-colors"
-                  onClick={() => setShowAddForm(true)}
-                >
-                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
-                  </svg>
-                  Add Asset
-                </button>
-              </div>
-
-              {/* Calculator Buttons Section */}
-              <div className="calculator-section flex flex-col items-center gap-4">
-                <div className="calculator-buttons flex flex-wrap justify-center gap-4">
-                  <button className="calculator-btn" onClick={() => navigate('/sip-calculator')}>
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v12m-3-2.818l.879.659c1.171.879 3.07.879 4.242 0 1.172-.879 1.172-2.303 0-3.182C13.536 12.219 12.768 12 12 12c-.725 0-1.45-.22-2.003-.659-1.106-.879-1.106-2.303 0-3.182s2.9-.879 4.006 0l.415.33M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            <div className="dashboard-container">
+              <div className="dashboard-header">
+                <h1 className="dashboard-title">Portfolio Dashboard</h1>
+                <div className="header-actions">
+                  <button 
+                    className="add-asset-btn"
+                    onClick={() => setShowAddForm(true)}
+                  >
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                      <path fillRule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clipRule="evenodd" />
                     </svg>
-                    SIP Calculator
+                    Add Asset
                   </button>
-                  <button className="calculator-btn" onClick={() => navigate('/fd-calculator')}>
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v12m-3-2.818l.879.659c1.171.879 3.07.879 4.242 0 1.172-.879 1.172-2.303 0-3.182C13.536 12.219 12.768 12 12 12c-.725 0-1.45-.22-2.003-.659-1.106-.879-1.106-2.303 0-3.182s2.9-.879 4.006 0l.415.33M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
-                    FD Calculator
-                  </button>
-                  <button className="calculator-btn" onClick={() => navigate('/pf-calculator')}>
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v12m-3-2.818l.879.659c1.171.879 3.07.879 4.242 0 1.172-.879 1.172-2.303 0-3.182C13.536 12.219 12.768 12 12 12c-.725 0-1.45-.22-2.003-.659-1.106-.879-1.106-2.303 0-3.182s2.9-.879 4.006 0l.415.33M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
-                    PF Calculator
-                  </button>
-                  <button className="calculator-btn" onClick={() => window.open('https://investmentchatbot-zxfk2mcyx69neaqdckqczm.streamlit.app', '_blank')}>
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09zM18.259 8.715L18 9.75l-.259-1.035a3.375 3.375 0 00-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 002.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 002.456 2.456zM16.894 20.567L16.5 21.75l-.394-1.183a2.25 2.25 0 00-1.423-1.423L13.5 18.75l1.183-.394a2.25 2.25 0 001.423-1.423l.394-1.183.394 1.183a2.25 2.25 0 001.423 1.423l1.183.394-1.183.394a2.25 2.25 0 00-1.423 1.423z" />
+                  <a 
+                    href="https://investmentchatbot-zxfk2mcyx69neaqdckqczm.streamlit.app/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="ai-helper-btn"
+                  >
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                      <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v2H7a1 1 0 100 2h2v2a1 1 0 102 0v-2h2a1 1 0 100-2h-2V7z" clipRule="evenodd" />
                     </svg>
                     AI Investment Helper
-                  </button>
+                  </a>
                 </div>
               </div>
 
-              {/* Main Dashboard Content */}
-              <div className="dashboard-content flex flex-col lg:flex-row gap-6">
-                {/* Left Column - Portfolio Overview */}
-                <aside className="quick-view lg:w-1/3 bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6">
-                  <div className="quick-view-header mb-6">
-                    <h2 className="text-2xl font-bold mb-4">Portfolio Overview</h2>
+              <div className="calculator-buttons">
+                <button className="calculator-btn" onClick={() => navigate('/sip-calculator')}>
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 18.75a60.07 60.07 0 0115.797 2.101c.727.198 1.453-.342 1.453-1.096V18.75M3.75 4.5v.75A.75.75 0 013 6h-.75m0 0v-.375c0-.621.504-1.125 1.125-1.125H20.25M2.25 6v9m18-10.5v.75c0 .414.336.75.75.75h.75m-1.5-1.5h.375c.621 0 1.125.504 1.125 1.125v9.75c0 .621-.504 1.125-1.125 1.125h-.375m1.5-1.5H21a.75.75 0 00-.75.75v.75m0 0H3.75m0 0h-.375a1.125 1.125 0 01-1.125-1.125V15m1.5 1.5v-.75A.75.75 0 003 15h-.75M15 10.5a3 3 0 11-6 0 3 3 0 016 0zm3 0h.008v.008H18V10.5zm-12 0h.008v.008H6V10.5z" />
+                  </svg>
+                  SIP Calculator
+                </button>
+                <button className="calculator-btn" onClick={() => navigate('/fd-calculator')}>
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 18.75a60.07 60.07 0 0115.797 2.101c.727.198 1.453-.342 1.453-1.096V18.75M3.75 4.5v.75A.75.75 0 013 6h-.75m0 0v-.375c0-.621.504-1.125 1.125-1.125H20.25M2.25 6v9m18-10.5v.75c0 .414.336.75.75.75h.75m-1.5-1.5h.375c.621 0 1.125.504 1.125 1.125v9.75c0 .621-.504 1.125-1.125 1.125h-.375m1.5-1.5H21a.75.75 0 00-.75.75v.75m0 0H3.75m0 0h-.375a1.125 1.125 0 01-1.125-1.125V15m1.5 1.5v-.75A.75.75 0 003 15h-.75M15 10.5a3 3 0 11-6 0 3 3 0 016 0zm3 0h.008v.008H18V10.5zm-12 0h.008v.008H6V10.5z" />
+                  </svg>
+                  FD Calculator
+                </button>
+                <button className="calculator-btn" onClick={() => navigate('/pf-calculator')}>
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 18.75a60.07 60.07 0 0115.797 2.101c.727.198 1.453-.342 1.453-1.096V18.75M3.75 4.5v.75A.75.75 0 013 6h-.75m0 0v-.375c0-.621.504-1.125 1.125-1.125H20.25M2.25 6v9m18-10.5v.75c0 .414.336.75.75.75h.75m-1.5-1.5h.375c.621 0 1.125.504 1.125 1.125v9.75c0 .621-.504 1.125-1.125 1.125h-.375m1.5-1.5H21a.75.75 0 00-.75.75v.75m0 0H3.75m0 0h-.375a1.125 1.125 0 01-1.125-1.125V15m1.5 1.5v-.75A.75.75 0 003 15h-.75M15 10.5a3 3 0 11-6 0 3 3 0 016 0zm3 0h.008v.008H18V10.5zm-12 0h.008v.008H6V10.5z" />
+                  </svg>
+                  PF Calculator
+                </button>
+              </div>
+
+              <div className="dashboard-content">
+                <div className="portfolio-overview">
+                  <div className="overview-header">
+                    <h2 className="overview-title">Portfolio Overview</h2>
                   </div>
-                  <div className="quick-view-content space-y-6">
-                    <div className="quick-view-card total-value bg-blue-50 dark:bg-blue-900/20 p-4 rounded-lg">
-                      <h3 className="text-lg font-semibold mb-2">Total Portfolio Value</h3>
-                      <p className="value text-2xl font-bold">${calculateTotalPortfolioValue().toFixed(2)}</p>
+                  <div className="overview-content">
+                    <div className="quick-view-card total-value">
+                      <h3>Total Portfolio Value</h3>
+                      <p className="value">${calculateTotalPortfolioValue().toFixed(2)}</p>
                     </div>
-                    <div className="quick-view-card profit-loss bg-green-50 dark:bg-green-900/20 p-4 rounded-lg">
-                      <h3 className="text-lg font-semibold mb-2">Total Profit/Loss</h3>
-                      <p className={`value text-2xl font-bold ${calculateTotalProfitLoss() >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+                    <div className="quick-view-card profit-loss">
+                      <h3>Total Profit/Loss</h3>
+                      <p className={`value ${calculateTotalProfitLoss() >= 0 ? 'positive' : 'negative'}`}>
                         ${calculateTotalProfitLoss().toFixed(2)}
-                        <span className="percentage ml-2">
+                        <span className="percentage">
                           ({calculateTotalProfitLossPercentage().toFixed(2)}%)
                         </span>
                       </p>
                     </div>
-                    <div className="quick-view-card asset-count bg-purple-50 dark:bg-purple-900/20 p-4 rounded-lg">
-                      <h3 className="text-lg font-semibold mb-2">Total Assets</h3>
-                      <p className="value text-2xl font-bold">{portfolios.length}</p>
+                    <div className="quick-view-card asset-count">
+                      <h3>Total Assets</h3>
+                      <p className="value">{portfolios.length}</p>
                     </div>
-                    
+
                     <div className="quick-view-section">
-                      <h3 className="text-lg font-semibold mb-4">Top Performing Assets</h3>
-                      <div className="top-assets space-y-3">
+                      <h3>Top Performing Assets</h3>
+                      <div className="top-assets">
                         {getTopPerformingAssets().map(asset => (
-                          <div key={asset._id} className="top-asset-item bg-gray-50 dark:bg-gray-700 p-3 rounded-lg">
-                            <div className="asset-info flex justify-between items-center">
+                          <div key={asset._id} className="top-asset-item">
+                            <div className="asset-info">
                               <div>
-                                <span className="asset-name font-medium">{asset.name}</span>
-                                <span className="asset-symbol text-sm text-gray-500 ml-2">{asset.symbol}</span>
+                                <span className="asset-name">{asset.name}</span>
+                                <span className="asset-symbol">{asset.symbol}</span>
                               </div>
-                              <span className={`performance font-semibold ${calculateProfitLossPercentage(asset) >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+                              <span className={`performance ${calculateProfitLossPercentage(asset) >= 0 ? 'positive' : 'negative'}`}>
                                 {calculateProfitLossPercentage(asset).toFixed(2)}%
                               </span>
                             </div>
@@ -892,17 +905,17 @@ function App() {
                     </div>
 
                     <div className="quick-view-section">
-                      <h3 className="text-lg font-semibold mb-4">Asset Distribution</h3>
-                      <div className="asset-distribution space-y-3">
+                      <h3>Asset Distribution</h3>
+                      <div className="asset-distribution">
                         {Object.entries(getAssetTypeDistribution()).map(([type, value]) => (
                           <div key={type} className="distribution-item">
-                            <div className="distribution-info flex justify-between mb-1">
-                              <span className="type font-medium">{type}</span>
+                            <div className="distribution-info">
+                              <span className="type">{type}</span>
                               <span className="value">${value.toFixed(2)}</span>
                             </div>
-                            <div className="distribution-bar h-2 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
+                            <div className="distribution-bar">
                               <div 
-                                className="bar-fill h-full transition-all duration-300"
+                                className="bar-fill"
                                 style={{ 
                                   width: `${(value / calculateTotalPortfolioValue()) * 100}%`,
                                   backgroundColor: type === 'Stock' ? '#4caf50' : 
@@ -919,26 +932,27 @@ function App() {
                       </div>
                     </div>
                   </div>
-                </aside>
+                </div>
 
-                {/* Right Column - Portfolio Cards */}
-                <section className="portfolio-dashboard lg:w-2/3">
-                  <div className="portfolio-grid grid grid-cols-1 md:grid-cols-2 gap-6">
-                    {renderPortfolios()}
-                  </div>
-                </section>
+                <div className="portfolio-grid">
+                  {renderPortfolios()}
+                </div>
               </div>
             </div>
 
             {showAddForm && (
-              <div className="modal-overlay">
-                <section className={`portfolio-form ${isEditing ? 'editing' : ''}`}>
+              <div className="modal">
+                <section className="portfolio-form">
                   <div className="form-header">
                     <h2>{isEditing ? 'Edit Asset' : 'Add New Asset'}</h2>
-                    <button className="close-btn" onClick={handleCloseForm}>×</button>
+                    <button className="close-btn" onClick={() => setShowAddForm(false)}>
+                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                      </svg>
+                    </button>
                   </div>
                   {!isEditing && renderStepIndicator()}
-                  <form onSubmit={(e) => e.preventDefault()}>
+                  <form onSubmit={handleSubmit}>
                     {isEditing ? (
                       <>
                         <div className="form-group">
