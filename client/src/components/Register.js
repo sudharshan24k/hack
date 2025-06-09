@@ -7,6 +7,7 @@ function Register() {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     name: '',
+    username: '',
     email: '',
     password: ''
   });
@@ -26,11 +27,28 @@ function Register() {
     setLoading(true);
 
     try {
-      await axios.post('/api/auth/register', formData);
-      // Redirect to login page after successful registration
-      navigate('/login');
+      console.log('Attempting registration with:', { email: formData.email, username: formData.username });
+      const response = await axios.post('/api/auth/register', formData);
+      console.log('Registration response:', response.data);
+      
+      if (response.data.message === 'User registered successfully') {
+        // Redirect to login page after successful registration
+        navigate('/login');
+      } else {
+        setError('Registration failed. Please try again.');
+      }
     } catch (error) {
-      setError(error.response?.data?.message || 'Registration failed. Please try again.');
+      console.error('Registration error:', {
+        message: error.message,
+        response: error.response?.data,
+        status: error.response?.status
+      });
+      
+      if (error.response?.data?.message) {
+        setError(error.response.data.message);
+      } else {
+        setError('Registration failed. Please try again.');
+      }
     } finally {
       setLoading(false);
     }
@@ -55,6 +73,24 @@ function Register() {
               onChange={handleChange}
               placeholder="Enter your full name"
               required
+              disabled={loading}
+            />
+          </div>
+
+          <div className="form-group">
+            <label htmlFor="username">Username</label>
+            <input
+              type="text"
+              id="username"
+              name="username"
+              value={formData.username}
+              onChange={handleChange}
+              placeholder="Choose a username"
+              required
+              disabled={loading}
+              minLength="3"
+              pattern="^[a-zA-Z0-9_]+$"
+              title="Username can only contain letters, numbers, and underscores"
             />
           </div>
           
@@ -68,6 +104,7 @@ function Register() {
               onChange={handleChange}
               placeholder="Enter your email"
               required
+              disabled={loading}
             />
           </div>
           
@@ -82,6 +119,7 @@ function Register() {
               placeholder="Create a password"
               required
               minLength="6"
+              disabled={loading}
             />
           </div>
           

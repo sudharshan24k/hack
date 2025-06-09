@@ -3,36 +3,43 @@
   justify-content: center;
   align-items: center;
   min-height: 100vh;
-  background-color: #f8f9fa;
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
   padding: 20px;
 }
 
 .register-form-container {
   background: white;
   padding: 40px;
-  border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  border-radius: 16px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
   width: 100%;
-  max-width: 400px;
+  max-width: 420px;
+  transition: transform 0.3s ease;
+}
+
+.register-form-container:hover {
+  transform: translateY(-5px);
 }
 
 .register-form-container h2 {
   color: #1a237e;
   margin: 0 0 10px 0;
-  font-size: 24px;
+  font-size: 28px;
   text-align: center;
+  font-weight: 600;
 }
 
 .subtitle {
   color: #666;
   text-align: center;
   margin-bottom: 30px;
+  font-size: 16px;
 }
 
 .register-form {
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 24px;
 }
 
 .form-group {
@@ -45,71 +52,96 @@
   color: #333;
   font-weight: 500;
   font-size: 14px;
+  margin-left: 4px;
 }
 
 .form-group input {
-  padding: 12px;
-  border: 1px solid #ddd;
-  border-radius: 6px;
+  padding: 14px;
+  border: 2px solid #e0e0e0;
+  border-radius: 8px;
   font-size: 16px;
   transition: all 0.3s ease;
+  background-color: #f8f9fa;
 }
 
 .form-group input:focus {
   border-color: #1a237e;
   box-shadow: 0 0 0 3px rgba(26, 35, 126, 0.1);
   outline: none;
+  background-color: white;
 }
 
 .register-button {
   background-color: #1a237e;
   color: white;
   border: none;
-  padding: 14px;
-  border-radius: 6px;
+  padding: 16px;
+  border-radius: 8px;
   font-size: 16px;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
+  margin-top: 10px;
 }
 
 .register-button:hover {
   background-color: #0d1642;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(26, 35, 126, 0.2);
 }
 
 .register-button:disabled {
   background-color: #ccc;
   cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
 }
 
 .error-message {
   background-color: #ffebee;
   color: #c62828;
-  padding: 12px;
-  border-radius: 6px;
+  padding: 14px;
+  border-radius: 8px;
   margin-bottom: 20px;
   font-size: 14px;
   text-align: center;
+  border: 1px solid #ffcdd2;
 }
 
 .login-link {
   text-align: center;
-  margin-top: 20px;
+  margin-top: 24px;
   color: #666;
+  font-size: 15px;
 }
 
 .login-link a {
   color: #1a237e;
   text-decoration: none;
   font-weight: 500;
+  transition: color 0.3s ease;
 }
 
 .login-link a:hover {
+  color: #0d1642;
   text-decoration: underline;
 }
 
 @media (max-width: 480px) {
   .register-form-container {
     padding: 30px 20px;
+    margin: 20px;
+  }
+  
+  .register-form-container h2 {
+    font-size: 24px;
+  }
+  
+  .form-group input {
+    padding: 12px;
+  }
+  
+  .register-button {
+    padding: 14px;
   }
 } 

@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import './Login.css';
 
 function Login({ onLoginSuccess }) {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     email: '',
     password: ''
@@ -20,26 +21,25 @@ function Login({ onLoginSuccess }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError('');
+    setError(null);
     setLoading(true);
 
     try {
-      console.log('Attempting login with:', formData);
       const response = await axios.post('/api/auth/login', formData);
       console.log('Login response:', response.data);
       
-      if (response.data.user) {
-        // Save user info to localStorage
-        localStorage.setItem('user', JSON.stringify(response.data.user));
-        
-        // Notify parent component of successful login
-        onLoginSuccess();
-      } else {
-        setError('Invalid response from server');
-      }
-    } catch (error) {
-      console.error('Login error:', error);
-      setError(error.response?.data?.message || 'Login failed. Please try again.');
+      // Store user info and token
+      localStorage.setItem('user', JSON.stringify(response.data.user));
+      localStorage.setItem('token', response.data.token);
+      
+      // Set default authorization header for future requests
+      axios.defaults.headers.common['Authorization'] = `Bearer ${response.data.token}`;
+      
+      onLoginSuccess();
+      navigate('/dashboard');
+    } catch (err) {
+      console.error('Login error:', err);
+      setError(err.response?.data?.message || 'Login failed. Please try again.');
     } finally {
       setLoading(false);
     }
@@ -47,13 +47,10 @@ function Login({ onLoginSuccess }) {
 
   return (
     <div className="login-container">
-      <div className="login-form-container">
-        <h2>Welcome Back</h2>
-        <p className="subtitle">Please sign in to continue</p>
-        
+      <div className="login-form">
+        <h2>Login</h2>
         {error && <div className="error-message">{error}</div>}
-        
-        <form onSubmit={handleSubmit} className="login-form">
+        <form onSubmit={handleSubmit}>
           <div className="form-group">
             <label htmlFor="email">Email</label>
             <input
@@ -62,11 +59,10 @@ function Login({ onLoginSuccess }) {
               name="email"
               value={formData.email}
               onChange={handleChange}
-              placeholder="Enter your email"
               required
+              disabled={loading}
             />
           </div>
-          
           <div className="form-group">
             <label htmlFor="password">Password</label>
             <input
@@ -75,23 +71,17 @@ function Login({ onLoginSuccess }) {
               name="password"
               value={formData.password}
               onChange={handleChange}
-              placeholder="Enter your password"
               required
+              disabled={loading}
             />
           </div>
-          
-          <button 
-            type="submit" 
-            className="login-button"
-            disabled={loading}
-          >
-            {loading ? 'Signing in...' : 'Sign In'}
+          <button type="submit" disabled={loading}>
+            {loading ? 'Logging in...' : 'Login'}
           </button>
-
-          <p className="register-link">
-            Don't have an account? <Link to="/register">Create Account</Link>
-          </p>
         </form>
+        <p className="register-link">
+          Don't have an account? <Link to="/register">Register</Link>
+        </p>
       </div>
     </div>
   );

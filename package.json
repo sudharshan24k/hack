@@ -4,8 +4,10 @@
   "description": "A portfolio management API built with Node.js, Express, and Mongoose",
   "main": "src/server.js",
   "scripts": {
-    "start": "node src/server.js",
-    "dev": "nodemon src/server.js",
+    "kill-ports": "node scripts/kill-ports.js",
+    "prestart": "npm run kill-ports && sleep 1",
+    "start": "node --no-deprecation src/server.js",
+    "dev": "nodemon --no-deprecation src/server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [

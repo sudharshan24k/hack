@@ -3,9 +3,21 @@ const Portfolio = require('../models/Portfolio');
 // Get all portfolio items
 exports.getAllPortfolios = async (req, res) => {
   try {
-    const portfolios = await Portfolio.find().sort({ createdAt: -1 });
-    res.json(portfolios);
+    const portfolios = await Portfolio.find()
+      .sort({ createdAt: -1 })
+      .lean(); // Use lean() for better performance
+
+    // Calculate additional fields
+    const portfoliosWithCalculations = portfolios.map(portfolio => ({
+      ...portfolio,
+      totalValue: portfolio.quantity * portfolio.currentPrice,
+      profitLoss: (portfolio.currentPrice - portfolio.purchasePrice) * portfolio.quantity,
+      profitLossPercentage: ((portfolio.currentPrice - portfolio.purchasePrice) / portfolio.purchasePrice) * 100
+    }));
+
+    res.json(portfoliosWithCalculations);
   } catch (error) {
+    console.error('Error fetching portfolios:', error);
     res.status(500).json({ message: error.message });
   }
 };
@@ -13,12 +25,22 @@ exports.getAllPortfolios = async (req, res) => {
 // Get a single portfolio item
 exports.getPortfolioById = async (req, res) => {
   try {
-    const portfolio = await Portfolio.findById(req.params.id);
+    const portfolio = await Portfolio.findById(req.params.id).lean();
     if (!portfolio) {
       return res.status(404).json({ message: 'Portfolio item not found' });
     }
-    res.json(portfolio);
+
+    // Calculate additional fields
+    const portfolioWithCalculations = {
+      ...portfolio,
+      totalValue: portfolio.quantity * portfolio.currentPrice,
+      profitLoss: (portfolio.currentPrice - portfolio.purchasePrice) * portfolio.quantity,
+      profitLossPercentage: ((portfolio.currentPrice - portfolio.purchasePrice) / portfolio.purchasePrice) * 100
+    };
+
+    res.json(portfolioWithCalculations);
   } catch (error) {
+    console.error('Error fetching portfolio:', error);
     res.status(500).json({ message: error.message });
   }
 };
@@ -31,7 +53,16 @@ exports.createPortfolio = async (req, res) => {
     console.log('Created portfolio instance:', portfolio);
     const savedPortfolio = await portfolio.save();
     console.log('Saved portfolio:', savedPortfolio);
-    res.status(201).json(savedPortfolio);
+
+    // Calculate additional fields
+    const portfolioWithCalculations = {
+      ...savedPortfolio.toObject(),
+      totalValue: savedPortfolio.quantity * savedPortfolio.currentPrice,
+      profitLoss: (savedPortfolio.currentPrice - savedPortfolio.purchasePrice) * savedPortfolio.quantity,
+      profitLossPercentage: ((savedPortfolio.currentPrice - savedPortfolio.purchasePrice) / savedPortfolio.purchasePrice) * 100
+    };
+
+    res.status(201).json(portfolioWithCalculations);
   } catch (error) {
     console.error('Error creating portfolio:', error);
     console.error('Validation errors:', error.errors);
@@ -52,11 +83,21 @@ exports.updatePortfolio = async (req, res) => {
       req.params.id,
       req.body,
       { new: true, runValidators: true }
-    );
+    ).lean();
+
     if (!portfolio) {
       return res.status(404).json({ message: 'Portfolio item not found' });
     }
-    res.json(portfolio);
+
+    // Calculate additional fields
+    const portfolioWithCalculations = {
+      ...portfolio,
+      totalValue: portfolio.quantity * portfolio.currentPrice,
+      profitLoss: (portfolio.currentPrice - portfolio.purchasePrice) * portfolio.quantity,
+      profitLossPercentage: ((portfolio.currentPrice - portfolio.purchasePrice) / portfolio.purchasePrice) * 100
+    };
+
+    res.json(portfolioWithCalculations);
   } catch (error) {
     console.error('Error updating portfolio:', error);
     res.status(400).json({ message: error.message });
