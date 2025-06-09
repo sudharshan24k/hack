@@ -569,17 +569,7 @@ function App() {
                 </div>
               )}
             </div>
-            <div className="form-actions">
-              <button type="button" className="prev-btn" onClick={handlePrevStep}>
-                Previous
-              </button>
-              <button type="button" className="submit-btn" onClick={handleSubmit}>
-                Add Asset
-              </button>
-              <button type="button" className="cancel-btn" onClick={handleCloseForm}>
-                Cancel
-              </button>
-            </div>
+        
           </div>
         );
       default:
@@ -1089,6 +1079,7 @@ function App() {
                             Cancel
                           </button>
                         </div>
+                        
                       </>
                     )}
                   </form>
