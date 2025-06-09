@@ -1059,9 +1059,9 @@ function App() {
                           />
                         </div>
                         <div className="form-actions">
-                          <button type="submit" className="submit-btn">
+                          <button type="button" className="submit-btn" onClick={handleSubmit}>
                             Update Asset
-                          </button>
+                        </button>
                           <button type="button" className="cancel-btn" onClick={handleCloseForm}>
                             Cancel
                           </button>
