@@ -1,39 +1,72 @@
 const mongoose = require('mongoose');
 
 const portfolioSchema = new mongoose.Schema({
-  title: {
+  name: {
     type: String,
     required: true,
     trim: true
   },
-  description: {
+  type: {
     type: String,
-    required: true
+    required: true,
+    enum: ['Stock', 'Bond', 'ETF', 'Mutual Fund', 'Cryptocurrency', 'Real Estate', 'Other']
   },
-  imageUrl: {
+  symbol: {
     type: String,
-    required: true
+    required: true,
+    trim: true
   },
-  technologies: [{
-    type: String,
-    required: true
-  }],
-  projectUrl: {
-    type: String,
-    required: true
+  quantity: {
+    type: Number,
+    required: true,
+    min: 0
   },
-  githubUrl: {
-    type: String,
-    required: true
+  purchasePrice: {
+    type: Number,
+    required: true,
+    min: 0
   },
-  createdAt: {
+  currentPrice: {
+    type: Number,
+    required: true,
+    min: 0
+  },
+  purchaseDate: {
     type: Date,
-    default: Date.now
+    required: true
   },
-  updatedAt: {
-    type: Date,
-    default: Date.now
+  sector: {
+    type: String,
+    trim: true
+  },
+  riskLevel: {
+    type: String,
+    required: true,
+    enum: ['Low', 'Medium', 'High']
+  },
+  notes: {
+    type: String,
+    trim: true
   }
+}, {
+  timestamps: true
 });
 
-module.exports = mongoose.model('Portfolio', portfolioSchema); 
+// Virtual for calculating total value
+portfolioSchema.virtual('totalValue').get(function() {
+  return this.quantity * this.currentPrice;
+});
+
+// Virtual for calculating profit/loss
+portfolioSchema.virtual('profitLoss').get(function() {
+  return (this.currentPrice - this.purchasePrice) * this.quantity;
+});
+
+// Virtual for calculating profit/loss percentage
+portfolioSchema.virtual('profitLossPercentage').get(function() {
+  return ((this.currentPrice - this.purchasePrice) / this.purchasePrice) * 100;
+});
+
+const Portfolio = mongoose.model('Portfolio', portfolioSchema);
+
+module.exports = Portfolio; 

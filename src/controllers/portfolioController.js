@@ -26,11 +26,22 @@ exports.getPortfolioById = async (req, res) => {
 // Create a new portfolio item
 exports.createPortfolio = async (req, res) => {
   try {
+    console.log('Received portfolio data:', req.body);
     const portfolio = new Portfolio(req.body);
+    console.log('Created portfolio instance:', portfolio);
     const savedPortfolio = await portfolio.save();
+    console.log('Saved portfolio:', savedPortfolio);
     res.status(201).json(savedPortfolio);
   } catch (error) {
-    res.status(400).json({ message: error.message });
+    console.error('Error creating portfolio:', error);
+    console.error('Validation errors:', error.errors);
+    console.error('Error name:', error.name);
+    console.error('Error message:', error.message);
+    res.status(400).json({ 
+      message: error.message,
+      details: error.errors,
+      name: error.name
+    });
   }
 };
 
@@ -39,14 +50,15 @@ exports.updatePortfolio = async (req, res) => {
   try {
     const portfolio = await Portfolio.findByIdAndUpdate(
       req.params.id,
-      { ...req.body, updatedAt: Date.now() },
-      { new: true }
+      req.body,
+      { new: true, runValidators: true }
     );
     if (!portfolio) {
       return res.status(404).json({ message: 'Portfolio item not found' });
     }
     res.json(portfolio);
   } catch (error) {
+    console.error('Error updating portfolio:', error);
     res.status(400).json({ message: error.message });
   }
 };
@@ -60,6 +72,7 @@ exports.deletePortfolio = async (req, res) => {
     }
     res.json({ message: 'Portfolio item deleted successfully' });
   } catch (error) {
+    console.error('Error deleting portfolio:', error);
     res.status(500).json({ message: error.message });
   }
 }; 
