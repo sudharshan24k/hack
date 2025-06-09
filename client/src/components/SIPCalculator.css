@@ -1,0 +1,357 @@
+.sip-calculator {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+  max-width: 56rem;
+  margin: 0 auto;
+}
+
+.calculator-container {
+  background: white;
+  border-radius: 0.75rem;
+  padding: 2rem;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  width: 100%;
+}
+
+.calculator-container h2 {
+  color: #1f2937;
+  margin-bottom: 0.5rem;
+  font-size: 1.875rem;
+}
+
+.description {
+  color: #6b7280;
+  margin-bottom: 2rem;
+}
+
+/* Form Styles */
+.calculator-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.input-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+  width: 100%;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  width: 100%;
+}
+
+.form-group label {
+  color: #374151;
+  font-size: 0.875rem;
+  font-weight: 500;
+  margin-bottom: 0.25rem;
+}
+
+.form-group input,
+.form-group select {
+  width: 100%;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid #d1d5db;
+  border-radius: 0.375rem;
+  font-size: 0.875rem;
+  transition: all 0.2s;
+}
+
+.form-group input::placeholder {
+  font-size: 0.75rem;
+  color: #9ca3af;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+}
+
+.calculate-btn {
+  width: 100%;
+  background-color: #2563eb;
+  color: white;
+  font-weight: 600;
+  padding: 0.5rem 1.5rem;
+  border: none;
+  border-radius: 0.5rem;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+.calculate-btn:hover {
+  background-color: #1d4ed8;
+}
+
+/* Results Section */
+.results-section {
+  margin-top: 2rem;
+}
+
+.results-section h3 {
+  color: #1f2937;
+  margin-bottom: 1.5rem;
+  font-size: 1.25rem;
+}
+
+.results-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.result-card {
+  background: white;
+  padding: 1.5rem;
+  border-radius: 0.5rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.result-card h4 {
+  color: #6b7280;
+  font-size: 0.875rem;
+  margin-bottom: 0.5rem;
+}
+
+.result-card p {
+  color: #1f2937;
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin: 0;
+}
+
+/* Charts */
+.asset-distribution,
+.investment-chart {
+  margin: 2rem 0;
+  padding: 1.5rem;
+  background: white;
+  border-radius: 0.5rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.asset-distribution h3,
+.investment-chart h3 {
+  color: #1f2937;
+  margin-bottom: 1.5rem;
+  font-size: 1.25rem;
+}
+
+.chart-container {
+  width: 100%;
+  height: 400px;
+  margin-top: 1rem;
+}
+
+.asset-distribution .chart-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Yearly Breakdown */
+.yearly-breakdown {
+  margin-top: 2rem;
+}
+
+.breakdown-table {
+  overflow-x: auto;
+  background: white;
+  border-radius: 0.5rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.breakdown-table table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.breakdown-table th,
+.breakdown-table td {
+  padding: 1rem;
+  text-align: left;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.breakdown-table th {
+  background-color: #f9fafb;
+  color: #374151;
+  font-weight: 600;
+  font-size: 0.875rem;
+}
+
+.breakdown-table td {
+  color: #1f2937;
+}
+
+/* Utility Classes */
+.profit {
+  color: #059669;
+}
+
+.loss {
+  color: #dc2626;
+}
+
+/* Dark Mode */
+.dark .calculator-container,
+.dark .result-card,
+.dark .asset-distribution,
+.dark .investment-chart,
+.dark .breakdown-table {
+  background: #1f2937;
+}
+
+.dark .calculator-container h2,
+.dark .results-section h3,
+.dark .asset-distribution h3,
+.dark .investment-chart h3,
+.dark .result-card p,
+.dark .breakdown-table td {
+  color: #f3f4f6;
+}
+
+.dark .description,
+.dark .result-card h4 {
+  color: #9ca3af;
+}
+
+.dark .form-group label {
+  color: #e5e7eb;
+}
+
+.dark .form-group input,
+.dark .form-group select {
+  background-color: #374151;
+  border-color: #4b5563;
+  color: #f3f4f6;
+}
+
+.dark .form-group input:focus,
+.dark .form-group select:focus {
+  border-color: #60a5fa;
+  box-shadow: 0 0 0 2px rgba(96, 165, 250, 0.2);
+}
+
+.dark .breakdown-table th {
+  background-color: #374151;
+  color: #e5e7eb;
+}
+
+.dark .breakdown-table td {
+  border-bottom-color: #4b5563;
+}
+
+/* Responsive Design */
+@media (min-width: 768px) {
+  .sip-calculator {
+    padding: 2.5rem;
+  }
+
+  .input-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+  }
+
+  .form-group {
+    width: 100%;
+  }
+
+  .controls-container {
+    flex-direction: row;
+    justify-content: center;
+  }
+
+  .controls-container .form-group {
+    width: auto;
+  }
+
+  .controls-container .calculate-btn {
+    width: auto;
+  }
+}
+
+@media (max-width: 768px) {
+  .chart-container {
+    height: 300px;
+  }
+
+  .breakdown-table th,
+  .breakdown-table td {
+    padding: 0.75rem;
+    font-size: 0.875rem;
+  }
+}
+
+.controls-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.controls-container .form-group {
+  width: 100%;
+  max-width: 300px;
+}
+
+.controls-container .calculate-btn {
+  width: 100%;
+  max-width: 300px;
+}
+
+.calculator-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.back-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  background-color: #f3f4f6;
+  color: #374151;
+  border: none;
+  border-radius: 0.5rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.back-btn:hover {
+  background-color: #e5e7eb;
+}
+
+.back-btn svg {
+  width: 1.25rem;
+  height: 1.25rem;
+}
+
+/* Dark mode styles */
+.dark .back-btn {
+  background-color: #374151;
+  color: #e5e7eb;
+}
+
+.dark .back-btn:hover {
+  background-color: #4b5563;
+} 

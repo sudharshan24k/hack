@@ -8,6 +8,10 @@ import AssetCard from './components/AssetCard';
 import Profile from './components/Profile';
 import AssetDetails from './components/AssetDetails';
 import Home from './components/Home';
+import AssetDetailsModal from './components/AssetDetailsModal';
+import SIPCalculator from './components/SIPCalculator';
+import FDCalculator from './components/FDCalculator';
+import PFCalculator from './components/PFCalculator';
 
 // Configure axios defaults
 axios.defaults.baseURL = 'http://localhost:3000';
@@ -51,7 +55,6 @@ function App() {
   const [filters, setFilters] = useState({
     type: 'All',
     riskLevel: 'All',
-    sector: 'All',
     searchTerm: ''
   });
   const [sortBy, setSortBy] = useState('name');
@@ -72,6 +75,8 @@ function App() {
     newPassword: '',
     confirmPassword: ''
   });
+
+  const [showAssetDetails, setShowAssetDetails] = useState(false);
 
   const calculateTotalValue = useCallback((portfolio) => {
     if (!portfolio) return 0;
@@ -98,15 +103,11 @@ function App() {
     if (filters.riskLevel !== 'All') {
       filtered = filtered.filter(p => p.riskLevel === filters.riskLevel);
     }
-    if (filters.sector !== 'All') {
-      filtered = filtered.filter(p => p.sector === filters.sector);
-    }
     if (filters.searchTerm) {
       const searchLower = filters.searchTerm.toLowerCase();
       filtered = filtered.filter(p => 
         p.name.toLowerCase().includes(searchLower) ||
-        (p.symbol && p.symbol.toLowerCase().includes(searchLower)) ||
-        (p.sector && p.sector.toLowerCase().includes(searchLower))
+        (p.symbol && p.symbol.toLowerCase().includes(searchLower))
       );
     }
 
@@ -186,6 +187,25 @@ function App() {
     }
   };
 
+  const handleEditPortfolio = (portfolio) => {
+    console.log('Editing portfolio:', portfolio);
+    setSelectedAsset(portfolio);
+    setFormData({
+      name: portfolio.name || '',
+      type: portfolio.type || 'Stock',
+      symbol: portfolio.symbol || '',
+      quantity: portfolio.quantity?.toString() || '',
+      purchasePrice: portfolio.purchasePrice?.toString() || '',
+      currentPrice: portfolio.currentPrice?.toString() || '',
+      purchaseDate: portfolio.purchaseDate ? new Date(portfolio.purchaseDate).toISOString().split('T')[0] : '',
+      notes: portfolio.notes || '',
+      sector: portfolio.sector || '',
+      riskLevel: portfolio.riskLevel || 'Medium'
+    });
+    setIsEditing(true);
+    setShowAddForm(true);
+  };
+
   const handleSubmit = async (e) => {
     if (e) e.preventDefault();
     console.log('Form submitted with data:', formData);
@@ -230,6 +250,10 @@ function App() {
               p._id === selectedAsset._id ? response.data : p
             )
           );
+          // Close the form after successful update
+          setShowAddForm(false);
+          setIsEditing(false);
+          setSelectedAsset(null);
         }
       } else {
         // Create new portfolio
@@ -239,10 +263,12 @@ function App() {
           alert('Portfolio added successfully!');
           // Add the new portfolio to the list
           setPortfolios(prevPortfolios => [...prevPortfolios, response.data]);
+          // Close the form after successful creation
+          setShowAddForm(false);
         }
       }
       
-      // Reset form and close modal
+      // Reset form
       setFormData({
         name: '',
         type: '',
@@ -255,10 +281,7 @@ function App() {
         riskLevel: '',
         notes: ''
       });
-      setShowAddForm(false);
       setCurrentStep(1);
-      setIsEditing(false);
-      setSelectedAsset(null);
     } catch (error) {
       console.error('Error saving portfolio:', error);
       console.error('Error details:', {
@@ -284,30 +307,6 @@ function App() {
       ...filters,
       [e.target.name]: e.target.value
     });
-  };
-
-  const getUniqueSectors = () => {
-    return ['All', ...new Set(portfolios.map(p => p.sector).filter(Boolean))];
-  };
-
-  const handleEditPortfolio = (portfolio) => {
-    console.log('Editing portfolio:', portfolio);
-    setSelectedAsset(portfolio);
-    setFormData({
-      name: portfolio.name || '',
-      type: portfolio.type || 'Stock',
-      symbol: portfolio.symbol || '',
-      quantity: portfolio.quantity?.toString() || '',
-      purchasePrice: portfolio.purchasePrice?.toString() || '',
-      currentPrice: portfolio.currentPrice?.toString() || '',
-      purchaseDate: portfolio.purchaseDate ? new Date(portfolio.purchaseDate).toISOString().split('T')[0] : '',
-      notes: portfolio.notes || '',
-      sector: portfolio.sector || '',
-      riskLevel: portfolio.riskLevel || 'Medium'
-    });
-    setIsEditing(true);
-    setShowAddForm(true);
-    setCurrentStep(1); // Reset to first step when editing
   };
 
   const handleDeleteAsset = async (portfolioId, assetId) => {
@@ -670,6 +669,7 @@ function App() {
           <div className="portfolio-actions">
             <button onClick={() => handleEditPortfolio(portfolio)}>Edit Portfolio</button>
             <button onClick={() => handleDeletePortfolio(portfolio._id)}>Delete Portfolio</button>
+            <button onClick={() => handleAssetClick(portfolio)}>View Portfolio</button>
           </div>
         </div>
       );
@@ -747,6 +747,16 @@ function App() {
     }));
   };
 
+  const handleAssetClick = (asset) => {
+    setSelectedAsset(asset);
+    setShowAssetDetails(true);
+  };
+
+  const handleCloseAssetDetails = () => {
+    setShowAssetDetails(false);
+    setSelectedAsset(null);
+  };
+
   return (
     <div className="App">
       {isAuthenticated && (
@@ -786,155 +796,138 @@ function App() {
         <Route path="/register" element={<Register />} />
         <Route path="/profile" element={isAuthenticated ? <Profile /> : <Navigate to="/login" replace />} />
         <Route path="/portfolio/:id" element={isAuthenticated ? <AssetDetails /> : <Navigate to="/login" replace />} />
+        <Route path="/sip-calculator" element={isAuthenticated ? <SIPCalculator /> : <Navigate to="/login" replace />} />
+        <Route path="/fd-calculator" element={isAuthenticated ? <FDCalculator /> : <Navigate to="/login" replace />} />
+        <Route path="/pf-calculator" element={isAuthenticated ? <PFCalculator /> : <Navigate to="/login" replace />} />
         <Route path="/dashboard" element={isAuthenticated ? (
           <main className="App-main">
-            <div className="dashboard-container">
-              <aside className="quick-view">
-                <div className="quick-view-header">
-                  <h2>Portfolio Overview</h2>
+            <div className="dashboard-container flex flex-col gap-6 p-6">
+              {/* Top Section with Add Asset Button */}
+              <div className="dashboard-header flex justify-between items-center">
+                <h2 className="text-2xl font-bold">Portfolio Dashboard</h2>
+                <button 
+                  className="add-asset-btn flex items-center gap-2 px-6 py-3 bg-blue-600 text-white rounded-lg shadow-lg hover:bg-blue-700 transition-colors"
+                  onClick={() => setShowAddForm(true)}
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+                  </svg>
+                  Add Asset
+                </button>
+              </div>
+
+              {/* Calculator Buttons Section */}
+              <div className="calculator-section flex flex-col items-center gap-4">
+                <div className="calculator-buttons flex flex-wrap justify-center gap-4">
+                  <button className="calculator-btn" onClick={() => navigate('/sip-calculator')}>
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v12m-3-2.818l.879.659c1.171.879 3.07.879 4.242 0 1.172-.879 1.172-2.303 0-3.182C13.536 12.219 12.768 12 12 12c-.725 0-1.45-.22-2.003-.659-1.106-.879-1.106-2.303 0-3.182s2.9-.879 4.006 0l.415.33M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    SIP Calculator
+                  </button>
+                  <button className="calculator-btn" onClick={() => navigate('/fd-calculator')}>
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v12m-3-2.818l.879.659c1.171.879 3.07.879 4.242 0 1.172-.879 1.172-2.303 0-3.182C13.536 12.219 12.768 12 12 12c-.725 0-1.45-.22-2.003-.659-1.106-.879-1.106-2.303 0-3.182s2.9-.879 4.006 0l.415.33M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    FD Calculator
+                  </button>
+                  <button className="calculator-btn" onClick={() => navigate('/pf-calculator')}>
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v12m-3-2.818l.879.659c1.171.879 3.07.879 4.242 0 1.172-.879 1.172-2.303 0-3.182C13.536 12.219 12.768 12 12 12c-.725 0-1.45-.22-2.003-.659-1.106-.879-1.106-2.303 0-3.182s2.9-.879 4.006 0l.415.33M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    PF Calculator
+                  </button>
+                  <button className="calculator-btn" onClick={() => window.open('https://investmentchatbot-zxfk2mcyx69neaqdckqczm.streamlit.app', '_blank')}>
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09zM18.259 8.715L18 9.75l-.259-1.035a3.375 3.375 0 00-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 002.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 002.456 2.456zM16.894 20.567L16.5 21.75l-.394-1.183a2.25 2.25 0 00-1.423-1.423L13.5 18.75l1.183-.394a2.25 2.25 0 001.423-1.423l.394-1.183.394 1.183a2.25 2.25 0 001.423 1.423l1.183.394-1.183.394a2.25 2.25 0 00-1.423 1.423z" />
+                    </svg>
+                    AI Investment Helper
+                  </button>
                 </div>
-                <div className="quick-view-content">
-                  <div className="quick-view-card total-value">
-                    <h3>Total Portfolio Value</h3>
-                    <p className="value">${calculateTotalPortfolioValue().toFixed(2)}</p>
+              </div>
+
+              {/* Main Dashboard Content */}
+              <div className="dashboard-content flex flex-col lg:flex-row gap-6">
+                {/* Left Column - Portfolio Overview */}
+                <aside className="quick-view lg:w-1/3 bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6">
+                  <div className="quick-view-header mb-6">
+                    <h2 className="text-2xl font-bold mb-4">Portfolio Overview</h2>
                   </div>
-                  <div className="quick-view-card profit-loss">
-                    <h3>Total Profit/Loss</h3>
-                    <p className={`value ${calculateTotalProfitLoss() >= 0 ? 'profit' : 'loss'}`}>
-                      ${calculateTotalProfitLoss().toFixed(2)}
-                      <span className="percentage">
-                        ({calculateTotalProfitLossPercentage().toFixed(2)}%)
-                      </span>
-                    </p>
-                  </div>
-                  <div className="quick-view-card asset-count">
-                    <h3>Total Assets</h3>
-                    <p className="value">{portfolios.length}</p>
-                  </div>
-                  
-                  <div className="quick-view-section">
-                    <h3>Top Performing Assets</h3>
-                    <div className="top-assets">
-                      {getTopPerformingAssets().map(asset => (
-                        <div key={asset._id} className="top-asset-item">
-                          <div className="asset-info">
-                            <span className="asset-name">{asset.name}</span>
-                            <span className="asset-symbol">{asset.symbol}</span>
+                  <div className="quick-view-content space-y-6">
+                    <div className="quick-view-card total-value bg-blue-50 dark:bg-blue-900/20 p-4 rounded-lg">
+                      <h3 className="text-lg font-semibold mb-2">Total Portfolio Value</h3>
+                      <p className="value text-2xl font-bold">${calculateTotalPortfolioValue().toFixed(2)}</p>
+                    </div>
+                    <div className="quick-view-card profit-loss bg-green-50 dark:bg-green-900/20 p-4 rounded-lg">
+                      <h3 className="text-lg font-semibold mb-2">Total Profit/Loss</h3>
+                      <p className={`value text-2xl font-bold ${calculateTotalProfitLoss() >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+                        ${calculateTotalProfitLoss().toFixed(2)}
+                        <span className="percentage ml-2">
+                          ({calculateTotalProfitLossPercentage().toFixed(2)}%)
+                        </span>
+                      </p>
+                    </div>
+                    <div className="quick-view-card asset-count bg-purple-50 dark:bg-purple-900/20 p-4 rounded-lg">
+                      <h3 className="text-lg font-semibold mb-2">Total Assets</h3>
+                      <p className="value text-2xl font-bold">{portfolios.length}</p>
+                    </div>
+                    
+                    <div className="quick-view-section">
+                      <h3 className="text-lg font-semibold mb-4">Top Performing Assets</h3>
+                      <div className="top-assets space-y-3">
+                        {getTopPerformingAssets().map(asset => (
+                          <div key={asset._id} className="top-asset-item bg-gray-50 dark:bg-gray-700 p-3 rounded-lg">
+                            <div className="asset-info flex justify-between items-center">
+                              <div>
+                                <span className="asset-name font-medium">{asset.name}</span>
+                                <span className="asset-symbol text-sm text-gray-500 ml-2">{asset.symbol}</span>
+                              </div>
+                              <span className={`performance font-semibold ${calculateProfitLossPercentage(asset) >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+                                {calculateProfitLossPercentage(asset).toFixed(2)}%
+                              </span>
+                            </div>
                           </div>
-                          <span className={`performance ${calculateProfitLossPercentage(asset) >= 0 ? 'profit' : 'loss'}`}>
-                            {calculateProfitLossPercentage(asset).toFixed(2)}%
-                          </span>
-                        </div>
-                      ))}
+                        ))}
+                      </div>
+                    </div>
+
+                    <div className="quick-view-section">
+                      <h3 className="text-lg font-semibold mb-4">Asset Distribution</h3>
+                      <div className="asset-distribution space-y-3">
+                        {Object.entries(getAssetTypeDistribution()).map(([type, value]) => (
+                          <div key={type} className="distribution-item">
+                            <div className="distribution-info flex justify-between mb-1">
+                              <span className="type font-medium">{type}</span>
+                              <span className="value">${value.toFixed(2)}</span>
+                            </div>
+                            <div className="distribution-bar h-2 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
+                              <div 
+                                className="bar-fill h-full transition-all duration-300"
+                                style={{ 
+                                  width: `${(value / calculateTotalPortfolioValue()) * 100}%`,
+                                  backgroundColor: type === 'Stock' ? '#4caf50' : 
+                                                 type === 'Bond' ? '#2196f3' :
+                                                 type === 'ETF' ? '#ff9800' :
+                                                 type === 'Cryptocurrency' ? '#9c27b0' :
+                                                 type === 'Real Estate' ? '#f44336' :
+                                                 '#757575'
+                                }}
+                              />
+                            </div>
+                          </div>
+                        ))}
+                      </div>
                     </div>
                   </div>
+                </aside>
 
-                  <div className="quick-view-section">
-                    <h3>Asset Distribution</h3>
-                    <div className="asset-distribution">
-                      {Object.entries(getAssetTypeDistribution()).map(([type, value]) => (
-                        <div key={type} className="distribution-item">
-                          <div className="distribution-info">
-                            <span className="type">{type}</span>
-                            <span className="value">${value.toFixed(2)}</span>
-                          </div>
-                          <div className="distribution-bar">
-                            <div 
-                              className="bar-fill"
-                              style={{ 
-                                width: `${(value / calculateTotalPortfolioValue()) * 100}%`,
-                                backgroundColor: type === 'Stock' ? '#4caf50' : 
-                                               type === 'Bond' ? '#2196f3' :
-                                               type === 'ETF' ? '#ff9800' :
-                                               type === 'Cryptocurrency' ? '#9c27b0' :
-                                               type === 'Real Estate' ? '#f44336' :
-                                               '#757575'
-                              }}
-                            />
-                          </div>
-                        </div>
-                      ))}
-                    </div>
+                {/* Right Column - Portfolio Cards */}
+                <section className="portfolio-dashboard lg:w-2/3">
+                  <div className="portfolio-grid grid grid-cols-1 md:grid-cols-2 gap-6">
+                    {renderPortfolios()}
                   </div>
-                </div>
-              </aside>
-
-              <section className="portfolio-dashboard">
-                <div className="portfolio-controls">
-                  <div className="controls-top">
-                    <div className="search-bar">
-                      <input
-                        type="text"
-                        placeholder="Search assets..."
-                        value={filters.searchTerm}
-                        onChange={(e) => setFilters({...filters, searchTerm: e.target.value})}
-                      />
-                    </div>
-                    <button 
-                      className="add-asset-btn"
-                      onClick={handleAddClick}
-                    >
-                      Add Asset
-                    </button>
-                  </div>
-                  <div className="filters">
-                    <select
-                      name="type"
-                      value={filters.type}
-                      onChange={handleFilterChange}
-                    >
-                      <option value="All">All Types</option>
-                      <option value="Stock">Stocks</option>
-                      <option value="Bond">Bonds</option>
-                      <option value="ETF">ETFs</option>
-                      <option value="Mutual Fund">Mutual Funds</option>
-                      <option value="Cryptocurrency">Cryptocurrencies</option>
-                      <option value="Real Estate">Real Estate</option>
-                      <option value="Other">Other</option>
-                    </select>
-                    <select
-                      name="riskLevel"
-                      value={filters.riskLevel}
-                      onChange={handleFilterChange}
-                    >
-                      <option value="All">All Risk Levels</option>
-                      <option value="Low">Low Risk</option>
-                      <option value="Medium">Medium Risk</option>
-                      <option value="High">High Risk</option>
-                    </select>
-                    <select
-                      name="sector"
-                      value={filters.sector}
-                      onChange={handleFilterChange}
-                    >
-                      {getUniqueSectors().map(sector => (
-                        <option key={sector} value={sector}>{sector}</option>
-                      ))}
-                    </select>
-                  </div>
-                  <div className="sort-controls">
-                    <select
-                      value={`${sortBy}-${sortOrder}`}
-                      onChange={(e) => {
-                        const [field, order] = e.target.value.split('-');
-                        setSortBy(field);
-                        setSortOrder(order);
-                      }}
-                    >
-                      <option value="name-asc">Name (A-Z)</option>
-                      <option value="name-desc">Name (Z-A)</option>
-                      <option value="totalValue-desc">Highest Value</option>
-                      <option value="totalValue-asc">Lowest Value</option>
-                      <option value="profitLoss-desc">Best Performing</option>
-                      <option value="profitLoss-asc">Worst Performing</option>
-                    </select>
-                  </div>
-                </div>
-
-                <div className="portfolio-grid">
-                  {renderPortfolios()}
-                </div>
-              </section>
+                </section>
+              </div>
             </div>
 
             {showAddForm && (
@@ -1059,7 +1052,7 @@ function App() {
                           />
                         </div>
                         <div className="form-actions">
-                          <button type="submit" className="submit-btn">
+                          <button type="button" className="submit-btn" onClick={handleSubmit}>
                             Update Asset
                           </button>
                           <button type="button" className="cancel-btn" onClick={handleCloseForm}>
@@ -1164,6 +1157,13 @@ function App() {
           </main>
         ) : <Navigate to="/login" replace />} />
       </Routes>
+
+      {showAssetDetails && selectedAsset && (
+        <AssetDetailsModal
+          asset={selectedAsset}
+          onClose={handleCloseAssetDetails}
+        />
+      )}
     </div>
   );
 }

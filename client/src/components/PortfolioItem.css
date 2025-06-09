@@ -1,0 +1,209 @@
+.portfolio-item {
+  background: white;
+  border-radius: 1rem;
+  padding: 1.5rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s, box-shadow 0.2s;
+  cursor: pointer;
+}
+
+.portfolio-item:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.portfolio-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.portfolio-header h3 {
+  margin: 0;
+  font-size: 1.25rem;
+  color: #1f2937;
+}
+
+.asset-type {
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.asset-type.stocks {
+  background: #dbeafe;
+  color: #1e40af;
+}
+
+.asset-type.bonds {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.asset-type.etfs {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.asset-type.crypto {
+  background: #f3e8ff;
+  color: #6b21a8;
+}
+
+.portfolio-details {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+}
+
+.detail-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.label {
+  color: #6b7280;
+  font-size: 0.875rem;
+}
+
+.value {
+  font-weight: 600;
+  color: #1f2937;
+}
+
+.value.profit {
+  color: #059669;
+}
+
+.value.loss {
+  color: #dc2626;
+}
+
+.percentage {
+  font-size: 0.875rem;
+  margin-left: 0.5rem;
+  opacity: 0.8;
+}
+
+.risk-low {
+  color: #059669;
+}
+
+.risk-medium {
+  color: #d97706;
+}
+
+.risk-high {
+  color: #dc2626;
+}
+
+.portfolio-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid #e5e7eb;
+}
+
+.view-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  background-color: #3b82f6;
+  color: white;
+  border: none;
+  border-radius: 0.5rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.view-btn:hover {
+  background-color: #2563eb;
+}
+
+.view-btn svg {
+  width: 16px;
+  height: 16px;
+}
+
+/* Dark mode styles */
+.dark .portfolio-item {
+  background: #1f2937;
+}
+
+.dark .portfolio-header h3 {
+  color: #f3f4f6;
+}
+
+.dark .asset-type.stocks {
+  background: #1e3a8a;
+  color: #dbeafe;
+}
+
+.dark .asset-type.bonds {
+  background: #92400e;
+  color: #fef3c7;
+}
+
+.dark .asset-type.etfs {
+  background: #166534;
+  color: #dcfce7;
+}
+
+.dark .asset-type.crypto {
+  background: #6b21a8;
+  color: #f3e8ff;
+}
+
+.dark .label {
+  color: #9ca3af;
+}
+
+.dark .value {
+  color: #f3f4f6;
+}
+
+.dark .portfolio-actions {
+  border-top-color: #374151;
+}
+
+.dark .view-btn {
+  background-color: #2563eb;
+}
+
+.dark .view-btn:hover {
+  background-color: #1d4ed8;
+}
+
+@media (max-width: 640px) {
+  .portfolio-item {
+    padding: 1rem;
+  }
+
+  .portfolio-header h3 {
+    font-size: 1.125rem;
+  }
+
+  .asset-type {
+    font-size: 0.75rem;
+    padding: 0.25rem 0.5rem;
+  }
+
+  .view-btn {
+    padding: 0.375rem 0.75rem;
+    font-size: 0.75rem;
+  }
+
+  .view-btn svg {
+    width: 14px;
+    height: 14px;
+  }
+} 
