@@ -3,9 +3,9 @@ const Portfolio = require('../models/Portfolio');
 // Get all portfolio items
 exports.getAllPortfolios = async (req, res) => {
   try {
-    const portfolios = await Portfolio.find()
+    const portfolios = await Portfolio.find({ user: req.user.id })
       .sort({ createdAt: -1 })
-      .lean(); // Use lean() for better performance
+      .lean();
 
     // Calculate additional fields
     const portfoliosWithCalculations = portfolios.map(portfolio => ({
@@ -49,7 +49,10 @@ exports.getPortfolioById = async (req, res) => {
 exports.createPortfolio = async (req, res) => {
   try {
     console.log('Received portfolio data:', req.body);
-    const portfolio = new Portfolio(req.body);
+    const portfolio = new Portfolio({
+      ...req.body,
+      user: req.user.id 
+    });
     console.log('Created portfolio instance:', portfolio);
     const savedPortfolio = await portfolio.save();
     console.log('Saved portfolio:', savedPortfolio);
