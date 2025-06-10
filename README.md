@@ -206,34 +206,6 @@ POST /api/calculators/pf
 
 ---
 
-## 📝 License
-
-This project is licensed under the **MIT License** — see the [LICENSE](LICENSE) file.
-
----
-
-## 👥 Author
-
-* **Sudharshan Venkatraman**
-  GitHub: [@sudharshan24k](https://github.com/sudharshan24k)
-
----
-
-## 🙏 Acknowledgments
-
-* React & Tailwind CSS community
-* Chart.js for analytics components
-* All open-source contributors & testers
-
----
-
-## 📞 Support & Contact
-
-* Email: **[support@investmentdashboard.com](mailto:support@investmentdashboard.com)**
-* GitHub Issues: [Submit a bug or feature request](https://github.com/sudharshan24k/hack/issues)
-
----
-
 ## 🔄 Changelog & Versions
 
 ### Latest Updates (v1.3.0)
@@ -249,6 +221,4 @@ This project is licensed under the **MIT License** — see the [LICENSE](LICENSE
 * **v1.1.0**: Added SIP, FD, PF calculators
 * **v1.0.0**: MVP release
 
----
 
-> "Build your financial future, one smart investment at a time."
